@@ -4,7 +4,7 @@ export interface InvoiceItem {
   id: string;
   description: string;
   quantity: number;
-  unitPrice: number;
+  unitPrice: number; // en centimes
 }
 
 export type InvoiceStatus =
@@ -15,13 +15,13 @@ export type InvoiceStatus =
 
 export interface Invoice {
   id: string;
-  clientId: string; // relation backend
-  client?: Client;  // optionnel si jointure
+  clientId: string;
+  clientName?: string;
   items: InvoiceItem[];
   taxRate: number; // ex: 0.16
-  subtotal: number;
-  taxAmount: number;
-  total: number;
+  subtotal: number;   // en centimes
+  taxAmount: number;  // en centimes
+  total: number;      // en centimes
   currency: string;
   status: InvoiceStatus;
   issuedAt: string;

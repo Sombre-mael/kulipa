@@ -4,10 +4,7 @@ export interface Client {
   email: string;
   phone?: string;
   address?: string;
-
   currency: string; // ex: "USD", "EUR", "CDF"
-
   isActive: boolean;
-
   createdAt: string; // ISO date string
 }
