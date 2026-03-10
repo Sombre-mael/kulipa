@@ -1,63 +1,65 @@
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { Invoice } from "@/types/invoice";
 import StatusBadge from "../ui/StatusBadge";
 import { useClientStore } from "@/store/useClientStore";
 import { formatDate } from "@/utils/formatDate";
+import { Spacing } from "@/constants/design";
+import { useAppTheme } from "@/providers/AppThemeProvider";
 
 interface Props {
   invoice: Invoice;
   onPress: () => void;
 }
 
-function getStatusColor(status: string) {
-  switch (status) {
-    case "paid":
-      return "green";
-    case "overdue":
-      return "red";
-    case "draft":
-      return "orange";
-    default:
-      return "gray";
-  }
-}
-
 export default function InvoiceCard({ invoice, onPress }: Props) {
   const { clients } = useClientStore();
-  const client = clients.find(
-    (client) => client.id === invoice.clientId
-  );
+  const { colors } = useAppTheme();
+  const client = clients.find((entry) => entry.id === invoice.clientId);
 
   return (
     <TouchableOpacity
       onPress={onPress}
-      style={{
-        backgroundColor: "#f5f5f5",
-        padding: 16,
-        borderRadius: 10,
-        marginBottom: 12,
-      }}
+      style={[styles.card, { backgroundColor: colors.glassStrong, borderColor: colors.border }]}
     >
-      <View
-        style={{
-          flexDirection: "row",
-          justifyContent: "space-between",
-          marginBottom: 6,
-        }}
-      >
-        <Text style={{ fontWeight: "bold", fontSize: 16 }}>
-          {client ? client.name : "Client inconnu"}
-        </Text>
-        <StatusBadge status={invoice.status}/>
+      <View style={styles.row}>
+        <Text style={[styles.clientName, { color: colors.text }]}>{client ? client.name : "Client inconnu"}</Text>
+        <StatusBadge status={invoice.status} />
       </View>
 
-      <Text style={{ fontSize: 18, fontWeight: "bold" }}>
+      <Text style={[styles.amount, { color: colors.text }]}>
         {(invoice.total / 100).toFixed(2)} {invoice.currency}
       </Text>
 
-      <Text style={{ color: "#666", marginTop: 4 }}>
-        Date: {formatDate(invoice.dueDate)}
-      </Text>
+      <Text style={[styles.meta, { color: colors.textMuted }]}>Echeance: {formatDate(invoice.dueDate)}</Text>
     </TouchableOpacity>
   );
 }
+
+const styles = StyleSheet.create({
+  card: {
+    borderRadius: 18,
+    borderWidth: 1,
+    padding: Spacing.md,
+    marginBottom: 10,
+  },
+  row: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    gap: Spacing.sm,
+  },
+  clientName: {
+    fontWeight: "800",
+    fontSize: 16,
+    flex: 1,
+  },
+  amount: {
+    marginTop: 10,
+    fontSize: 24,
+    fontWeight: "900",
+  },
+  meta: {
+    marginTop: 8,
+    fontSize: 13,
+  },
+});

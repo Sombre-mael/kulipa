@@ -1,18 +1,20 @@
-import { View, TextInput } from "react-native";
+import { StyleSheet, Text } from "react-native";
 import { useState } from "react";
 import { useLocalSearchParams, useRouter } from "expo-router";
-
 import { useClientStore } from "@/store/useClientStore";
-import PrimaryButton from "@/components/ui/PrimaryButton";
+import AppScreen from "@/components/ui/AppScreen";
+import AppCard from "@/components/ui/AppCard";
+import AppInput from "@/components/ui/AppInput";
+import AppButton from "@/components/ui/AppButton";
+import { useAppTheme } from "@/providers/AppThemeProvider";
+import { Spacing } from "@/constants/design";
 
 export default function EditClientScreen() {
-
   const { id } = useLocalSearchParams();
   const router = useRouter();
-
+  const { colors } = useAppTheme();
   const { clients, updateClient } = useClientStore();
-
-  const client = clients.find((c) => c.id === String(id));
+  const client = clients.find((entry) => entry.id === String(id));
 
   const [name, setName] = useState(client?.name ?? "");
   const [email, setEmail] = useState(client?.email ?? "");
@@ -23,37 +25,25 @@ export default function EditClientScreen() {
   if (!client) return null;
 
   const handleSave = () => {
-
-    updateClient({
-      ...client,
-      name,
-      email,
-      phone,
-      address,
-      currency,
-    });
-
+    updateClient({ ...client, name, email, phone, address, currency });
     router.replace("/(tabs)/clients");
   };
 
   return (
-    <View style={{ padding: 20 }}>
-
-      <TextInput value={name} onChangeText={setName} />
-
-      <TextInput value={email} onChangeText={setEmail} />
-
-      <TextInput value={phone} onChangeText={setPhone} />
-
-      <TextInput value={address} onChangeText={setAddress} />
-
-      <TextInput value={currency} onChangeText={setCurrency} />
-
-      <PrimaryButton
-        title="Enregistrer modifications"
-        onPress={handleSave}
-      />
-
-    </View>
+    <AppScreen>
+      <Text style={[styles.title, { color: colors.text }]}>Modifier client</Text>
+      <AppCard style={{ marginTop: Spacing.sm, backgroundColor: colors.glassStrong }}>
+        <AppInput value={name} onChangeText={setName} placeholder="Nom" />
+        <AppInput value={email} onChangeText={setEmail} placeholder="Email" />
+        <AppInput value={phone} onChangeText={setPhone} placeholder="Telephone" />
+        <AppInput value={address} onChangeText={setAddress} placeholder="Adresse" />
+        <AppInput value={currency} onChangeText={setCurrency} placeholder="Devise" />
+        <AppButton title="Enregistrer modifications" onPress={handleSave} style={{ marginTop: 14 }} />
+      </AppCard>
+    </AppScreen>
   );
 }
+
+const styles = StyleSheet.create({
+  title: { fontSize: 30, fontWeight: "900" },
+});

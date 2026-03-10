@@ -1,4 +1,7 @@
-import { View, Text, TextInput } from "react-native";
+import { Text } from "react-native";
+import AppCard from "@/components/ui/AppCard";
+import AppInput from "@/components/ui/AppInput";
+import { useAppTheme } from "@/providers/AppThemeProvider";
 
 interface Props {
   taxRate: number;
@@ -6,15 +9,16 @@ interface Props {
 }
 
 export default function TaxSection({ taxRate, setTaxRate }: Props) {
+  const { colors } = useAppTheme();
   return (
-    <View style={{ marginTop: 20 }}>
-      <Text style={{ fontWeight: "bold", marginBottom: 8 }}>Taxe</Text>
-      <TextInput
+    <AppCard style={{ marginTop: 12, backgroundColor: colors.glassStrong }}>
+      <Text style={{ color: colors.text, fontWeight: "800", marginBottom: 4 }}>Taxe</Text>
+      <AppInput
         placeholder="Taux (ex: 0.16)"
         keyboardType="numeric"
         value={String(taxRate)}
         onChangeText={(value) => setTaxRate(Number(value) || 0)}
       />
-    </View>
+    </AppCard>
   );
 }

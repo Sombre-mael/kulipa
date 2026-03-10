@@ -1,4 +1,7 @@
-import { View, Text, TextInput } from "react-native";
+import { Text } from "react-native";
+import AppCard from "@/components/ui/AppCard";
+import AppInput from "@/components/ui/AppInput";
+import { useAppTheme } from "@/providers/AppThemeProvider";
 
 interface Props {
   clientId: string | null;
@@ -6,14 +9,11 @@ interface Props {
 }
 
 export default function ClientSection({ clientId, setClientId }: Props) {
+  const { colors } = useAppTheme();
   return (
-    <View style={{ marginTop: 12 }}>
-      <Text style={{ fontWeight: "bold", marginBottom: 8 }}>Client</Text>
-      <TextInput
-        placeholder="ID client"
-        value={clientId ?? ""}
-        onChangeText={(value) => setClientId(value || null)}
-      />
-    </View>
+    <AppCard style={{ marginTop: 12, backgroundColor: colors.glassStrong }}>
+      <Text style={{ color: colors.text, fontWeight: "800" }}>Client</Text>
+      <AppInput placeholder="ID client" value={clientId ?? ""} onChangeText={(value) => setClientId(value || null)} />
+    </AppCard>
   );
 }
